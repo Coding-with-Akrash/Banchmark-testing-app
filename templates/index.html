@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PC Benchmark Pro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">&#128187;</span>
+                <h1>PC Benchmark Pro</h1>
+            </div>
+            <p class="subtitle">Real Hardware Performance Testing</p>
+        </header>
+
+        <!-- System Info Section -->
+        <section class="system-info" id="systemInfo">
+            <h2>System Information</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-icon">&#128187;</div>
+                    <div class="info-content">
+                        <h3>Processor</h3>
+                        <p id="cpuInfo">Loading...</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">&#128268;</div>
+                    <div class="info-content">
+                        <h3>Cores</h3>
+                        <p id="coreInfo">Loading...</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">&#128170;</div>
+                    <div class="info-content">
+                        <h3>Memory</h3>
+                        <p id="memInfo">Loading...</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">&#128190;</div>
+                    <div class="info-content">
+                        <h3>Storage</h3>
+                        <p id="diskInfo">Loading...</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">&#128011;</div>
+                    <div class="info-content">
+                        <h3>OS</h3>
+                        <p id="osInfo">Loading...</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">&#9881;</div>
+                    <div class="info-content">
+                        <h3>Architecture</h3>
+                        <p id="archInfo">Loading...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Monitor Section -->
+        <section class="live-monitor" id="liveMonitor">
+            <h2>Live System Monitor</h2>
+            <div class="monitor-grid">
+                <div class="monitor-card">
+                    <div class="monitor-header">
+                        <span class="monitor-icon">&#128187;</span>
+                        <h3>CPU Usage</h3>
+                        <span class="monitor-value" id="cpuUsage">--</span>
+                    </div>
+                    <div class="monitor-bar">
+                        <div class="monitor-bar-fill" id="cpuUsageBar"></div>
+                    </div>
+                    <div class="monitor-details" id="cpuDetails">Loading...</div>
+                    <canvas id="cpuChartLive" class="small-chart"></canvas>
+                </div>
+                <div class="monitor-card">
+                    <div class="monitor-header">
+                        <span class="monitor-icon">&#128170;</span>
+                        <h3>Memory Usage</h3>
+                        <span class="monitor-value" id="memUsage">--</span>
+                    </div>
+                    <div class="monitor-bar">
+                        <div class="monitor-bar-fill mem-bar" id="memUsageBar"></div>
+                    </div>
+                    <div class="monitor-details" id="memDetails">Loading...</div>
+                    <canvas id="memChartLive" class="small-chart"></canvas>
+                </div>
+                <div class="monitor-card">
+                    <div class="monitor-header">
+                        <span class="monitor-icon">&#128190;</span>
+                        <h3>Disk I/O</h3>
+                        <span class="monitor-value" id="diskUsage">--</span>
+                    </div>
+                    <div class="monitor-bar">
+                        <div class="monitor-bar-fill disk-bar" id="diskUsageBar"></div>
+                    </div>
+                    <div class="monitor-details" id="diskDetails">Loading...</div>
+                    <canvas id="diskChartLive" class="small-chart"></canvas>
+                </div>
+                <div class="monitor-card">
+                    <div class="monitor-header">
+                        <span class="monitor-icon">&#128515;</span>
+                        <h3>Network</h3>
+                        <span class="monitor-value" id="netUsage">--</span>
+                    </div>
+                    <div class="monitor-bar">
+                        <div class="monitor-bar-fill net-bar" id="netUsageBar"></div>
+                    </div>
+                    <div class="monitor-details" id="netDetails">Loading...</div>
+                    <canvas id="netChartLive" class="small-chart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detailed Hardware Section -->
+        <section class="detailed-hardware">
+            <h2>Detailed Hardware Information</h2>
+            <div class="hardware-tabs">
+                <button class="tab-btn active" onclick="showTab('cpuTab')">CPU Details</button>
+                <button class="tab-btn" onclick="showTab('memTab')">Memory Details</button>
+                <button class="tab-btn" onclick="showTab('diskTab')">Storage Details</button>
+                <button class="tab-btn" onclick="showTab('networkTab')">Network</button>
+                <button class="tab-btn" onclick="showTab('sensorsTab')">Sensors</button>
+                <button class="tab-btn" onclick="showTab('processesTab')">Top Processes</button>
+            </div>
+            
+            <!-- CPU Details Tab -->
+            <div class="tab-content active" id="cpuTab">
+                <div class="hardware-grid">
+                    <div class="hardware-card">
+                        <h4>CPU Specification</h4>
+                        <div class="spec-list" id="cpuSpecList">
+                            <div class="spec-item"><span>Socket:</span><span id="cpuSocket">--</span></div>
+                            <div class="spec-item"><span>Base Frequency:</span><span id="cpuBaseFreq">--</span></div>
+                            <div class="spec-item"><span>Current Frequency:</span><span id="cpuCurrentFreq">--</span></div>
+                            <div class="spec-item"><span>Max Frequency:</span><span id="cpuMaxFreq">--</span></div>
+                            <div class="spec-item"><span>Physical Cores:</span><span id="cpuPhysicalCores">--</span></div>
+                            <div class="spec-item"><span>Logical Cores:</span><span id="cpuLogicalCores">--</span></div>
+                            <div class="spec-item"><span>Architecture:</span><span id="cpuArch">--</span></div>
+                            <div class="spec-item"><span>Uptime:</span><span id="cpuUptime">--</span></div>
+                        </div>
+                    </div>
+                    <div class="hardware-card">
+                        <h4>Real-time CPU Load</h4>
+                        <div class="cpu-per-core" id="cpuPerCore">
+                            <div class="core-load">
+                                <span class="core-label">Core 0</span>
+                                <div class="core-bar"><div class="core-fill" id="core0"></div></div>
+                                <span class="core-val" id="core0val">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Memory Details Tab -->
+            <div class="tab-content" id="memTab">
+                <div class="hardware-grid">
+                    <div class="hardware-card">
+                        <h4>Memory Breakdown</h4>
+                        <div class="spec-list" id="memSpecList">
+                            <div class="spec-item"><span>Total:</span><span id="memTotal">--</span></div>
+                            <div class="spec-item"><span>Used:</span><span id="memUsed">--</span></div>
+                            <div class="spec-item"><span>Available:</span><span id="memAvailable">--</span></div>
+                            <div class="spec-item"><span>Usage:</span><span id="memPercent">--</span></div>
+                            <div class="spec-item"><span>Cached:</span><span id="memCached">--</span></div>
+                            <div class="spec-item"><span>Buffers:</span><span id="memBuffers">--</span></div>
+                        </div>
+                    </div>
+                    <div class="hardware-card">
+                        <h4>Swap / Paging File</h4>
+                        <div class="spec-list" id="swapSpecList">
+                            <div class="spec-item"><span>Total:</span><span id="swapTotal">--</span></div>
+                            <div class="spec-item"><span>Used:</span><span id="swapUsed">--</span></div>
+                            <div class="spec-item"><span>Free:</span><span id="swapFree">--</span></div>
+                            <div class="spec-item"><span>Usage:</span><span id="swapPercent">--</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Storage Details Tab -->
+            <div class="tab-content" id="diskTab">
+                <div class="hardware-card">
+                    <h4>Storage Devices</h4>
+                    <div class="storage-list" id="storageList">
+                        <p>Loading storage information...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Network Tab -->
+            <div class="tab-content" id="networkTab">
+                <div class="hardware-card">
+                    <h4>Network Interfaces</h4>
+                    <div class="network-list" id="networkList">
+                        <p>Loading network information...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sensors Tab -->
+            <div class="tab-content" id="sensorsTab">
+                <div class="hardware-card">
+                    <h4>Temperature & Fan Sensors</h4>
+                    <div class="sensor-list" id="sensorList">
+                        <p>Loading sensor data...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Top Processes Tab -->
+            <div class="tab-content" id="processesTab">
+                <div class="hardware-card">
+                    <h4>Currently Running Processes (Top 10 by CPU)</h4>
+                    <table class="process-table">
+                        <thead>
+                            <tr>
+                                <th>PID</th>
+                                <th>Process Name</th>
+                                <th>CPU %</th>
+                                <th>Memory %</th>
+                                <th>Threads</th>
+                            </tr>
+                        </thead>
+                        <tbody id="processTableBody">
+                            <tr><td colspan="5">Loading process information...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benchmark Controls -->
+        <section class="benchmark-controls" id="benchmarkControls">
+            <h2>Benchmark Settings</h2>
+            <div class="controls-grid">
+                <div class="control-item">
+                    <label class="toggle">
+                        <input type="checkbox" id="cpuToggle" checked>
+                        <span class="slider"></span>
+                        <span class="label-text">CPU Benchmark</span>
+                    </label>
+                    <p class="control-desc">Mathematical operations & floating point tests</p>
+                </div>
+                <div class="control-item">
+                    <label class="toggle">
+                        <input type="checkbox" id="ramToggle" checked>
+                        <span class="slider"></span>
+                        <span class="label-text">Memory Benchmark</span>
+                    </label>
+                    <p class="control-desc">Sequential & random memory access</p>
+                </div>
+                <div class="control-item">
+                    <label class="toggle">
+                        <input type="checkbox" id="diskToggle" checked>
+                        <span class="slider"></span>
+                        <span class="label-text">Disk Benchmark</span>
+                    </label>
+                    <p class="control-desc">Sequential read/write performance</p>
+                </div>
+            </div>
+            <button class="start-btn" id="startBenchmark" onclick="startBenchmark()">
+                <span class="btn-icon">&#9654;</span>
+                Start Full Benchmark
+            </button>
+            <button class="cancel-btn" id="cancelBenchmark" onclick="cancelBenchmark()" style="display:none;">
+                Cancel
+            </button>
+        </section>
+
+        <!-- Progress Section -->
+        <section class="progress-section" id="progressSection" style="display:none;">
+            <h2>Benchmark Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p class="progress-text" id="progressText">Initializing...</p>
+            </div>
+            <div class="stage-info" id="stageInfo">
+                <div class="stage-card">
+                    <h4>CPU</h4>
+                    <div class="mini-progress"><div class="mini-fill" id="cpuProgress"></div></div>
+                    <span id="cpuStatus">Waiting</span>
+                </div>
+                <div class="stage-card">
+                    <h4>Memory</h4>
+                    <div class="mini-progress"><div class="mini-fill" id="ramProgress"></div></div>
+                    <span id="ramStatus">Waiting</span>
+                </div>
+                <div class="stage-card">
+                    <h4>Disk</h4>
+                    <div class="mini-progress"><div class="mini-fill" id="diskProgress"></div></div>
+                    <span id="diskStatus">Waiting</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results-section" id="resultsSection" style="display:none;">
+            <h2>Benchmark Results</h2>
+            
+            <!-- Overall Score -->
+            <div class="score-container">
+                <div class="overall-score" id="overallScore">
+                    <div class="score-circle">
+                        <svg viewBox="0 0 100 100">
+                            <circle class="score-bg" cx="50" cy="50" r="45"></circle>
+                            <circle class="score-fill" id="scoreCircle" cx="50" cy="50" r="45"></circle>
+                        </svg>
+                        <div class="score-text">
+                            <span id="scoreValue">--</span>
+                            <span class="score-label">Score</span>
+                        </div>
+                    </div>
+                    <p class="score-description" id="scoreDescription">Calculating...</p>
+                </div>
+            </div>
+
+            <!-- Detailed Results -->
+            <div class="results-grid">
+                <!-- CPU Results -->
+                <div class="result-card" id="cpuResultCard">
+                    <div class="result-header">
+                        <span class="result-icon">&#128187;</span>
+                        <h3>CPU Performance</h3>
+                    </div>
+                    <div class="result-content">
+                        <div class="result-score" id="cpuScore">--</div>
+                        <div class="result-details" id="cpuDetails">
+                            <p>Waiting for results...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RAM Results -->
+                <div class="result-card" id="ramResultCard">
+                    <div class="result-header">
+                        <span class="result-icon">&#128170;</span>
+                        <h3>Memory Performance</h3>
+                    </div>
+                    <div class="result-content">
+                        <div class="result-score" id="ramScore">--</div>
+                        <div class="result-details" id="ramDetails">
+                            <p>Waiting for results...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Disk Results -->
+                <div class="result-card" id="diskResultCard">
+                    <div class="result-header">
+                        <span class="result-icon">&#128190;</span>
+                        <h3>Disk Performance</h3>
+                    </div>
+                    <div class="result-content">
+                        <div class="result-score" id="diskScore">--</div>
+                        <div class="result-details" id="diskDetails">
+                            <p>Waiting for results...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-container">
+                <div class="chart-card">
+                    <h3>Performance Comparison</h3>
+                    <canvas id="performanceChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>CPU Iteration Performance</h3>
+                    <canvas id="cpuChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Detailed Breakdown -->
+            <div class="breakdown-section" id="breakdownSection">
+                <h3>Detailed Breakdown</h3>
+                <div class="breakdown-content" id="breakdownContent">
+                </div>
+            </div>
+
+            <!-- Timestamp -->
+            <div class="timestamp">
+                <p>Benchmark completed: <span id="completedAt">--</span></p>
+                <p>Total time: <span id="totalTime">--</span></p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>PC Benchmark Pro - Real Hardware Testing</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
